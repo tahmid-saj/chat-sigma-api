@@ -58,7 +58,10 @@ app.post("/initiateChat", (req, res) => {
           botMessage: botMessage
         }
       ]
-    })
+    });
+
+    console.log("users_activity: ", users_activity);
+    console.log("sessions_chat_transcript: ", sessions_chat_transcript);
   } catch (err) {
     res.status(400).json("error initiating chat");
   }
@@ -79,6 +82,8 @@ app.put("/sendMessage", (req, res) => {
         });
       }
     });
+
+    console.log("sessions_chat_transcript: ", sessions_chat_transcript);
   } catch (err) {
     res.status(400).json("error registering message");
   }
