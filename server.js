@@ -11,8 +11,8 @@ app.use(cors());
 const users_activity = [
   {
     userId: "123",
-    queried: "1",
-    emailed: "0"
+    queried: 0,
+    emailed: 0
   }
 ];
 
@@ -46,8 +46,8 @@ app.post("/initiateChat", (req, res) => {
 
     users_activity.push({
       userId: userId,
-      queried: "1",
-      emailed: "0"
+      queried: 1,
+      emailed: 0
     });
 
     sessions_chat_transcript.push({
@@ -61,7 +61,9 @@ app.post("/initiateChat", (req, res) => {
     });
 
     console.log("users_activity: ", users_activity);
-    console.log("sessions_chat_transcript: ", sessions_chat_transcript);
+    console.log("sessions_chat_transcript: ", userId, 
+                                              userMessage, 
+                                              botMessage);
   } catch (err) {
     res.status(400).json("error initiating chat");
   }
@@ -83,7 +85,16 @@ app.put("/sendMessage", (req, res) => {
       }
     });
 
-    console.log("sessions_chat_transcript: ", sessions_chat_transcript);
+    users_activity.forEach((user) => {
+      if (user.userId === userId) {
+        user.queried++;
+      };
+    });
+
+    console.log("users_activity: ", users_activity);
+    console.log("sessions_chat_transcript: ", userId, 
+                                              userMessage, 
+                                              botMessage);
   } catch (err) {
     res.status(400).json("error registering message");
   }
