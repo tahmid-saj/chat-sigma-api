@@ -1,11 +1,35 @@
-const express = require("express");
-const cors = require("cors");
+import axios from 'axios';
+import { Configuration, OpenAIApi } from "openai";
+import express from "express";
+import cors from "cors";
+import knex from "knex";
 
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
+
+const OPENAI_API_KEY = "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";
+
+const openai = axios.create({
+  baseURL: "https://api.openai.com/v1",
+  headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+  }
+});
+
+const db = knex({
+  client: "pg",
+  connection: {
+    host: "127.0.0.1",
+    port: 5432,
+    user: "postgres",
+    password: "test",
+    database: "chat-sigma"
+  }
+});
 
 // temporary databases
 const users_activity = [
@@ -34,9 +58,38 @@ app.get("/", (req, res) => {
 });
 
 // GET -> returning botMessage using requested userMessage
-// app.get("/getMessageQuery" (req, res) => {
+app.post("/getMessageQuery", async (req, res) => {
+  async function createChatCompletion(messages, options = {}) {
+    try {
+      const response = await openai.post("/chat/completions", {
+          model: options.model || "gpt-3.5-turbo",
+          messages,
+          ...options
+      });
+  
+      // console.log(response.data.choices[0].message.content);
+      res.json(response.data.choices[0].message.content);
+    } catch (error) {
+        console.error("Failted to create chat completion: ", error);
+    }
+  };
 
-// });
+  async function initiateGPTAPICall(userMessageInput) {
+    const messages = [
+        { role: "user", content: userMessageInput },
+    ];
+
+    const options = {
+        temperature: 1,
+        max_tokens: 4000
+    };
+
+    await createChatCompletion(messages, options);
+  };
+
+  const { userMessage } = req.body;
+  await initiateGPTAPICall(userMessage);
+});
 
 // POST -> creating new user in users_activity
 // (Only when chat is initiated for the first time)
