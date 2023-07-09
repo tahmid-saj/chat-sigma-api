@@ -3,6 +3,7 @@ import { Configuration, OpenAIApi } from "openai";
 import express from "express";
 import cors from "cors";
 import knex from "knex";
+import generateHash from "random-hash";
 
 const app = express();
 
@@ -27,7 +28,7 @@ const db = knex({
     port: 5432,
     user: "postgres",
     password: "test",
-    database: "chat-sigma"
+    database: "chat_sigma_sessions"
   }
 });
 
@@ -54,7 +55,12 @@ const sessions_chat_transcript = [
 
 // General GET -> returning all users
 app.get("/", (req, res) => {
-  res.json(users_activity);
+  // res.json(users_activity);
+
+  db.select("*").from("users_activity")
+  .then((data) => {
+    res.json(data);
+  });
 });
 
 // GET -> returning botMessage using requested userMessage
@@ -97,10 +103,21 @@ app.post("/initiateChat", (req, res) => {
   try {
     const { userId, userMessage, botMessage } = req.body;
 
-    users_activity.push({
-      userId: userId,
+    // users_activity.push({
+    //   userId: userId,
+    //   queried: 1,
+    //   emailed: 0
+    // });
+    // console.log("users_activity: ", users_activity);
+
+    db('users_activity')
+    .insert({
+      user_id: userId,
       queried: 1,
       emailed: 0
+    })
+    .catch((err) => {
+      res.status(400).json("error initiating chat");
     });
 
     sessions_chat_transcript.push({
@@ -113,7 +130,6 @@ app.post("/initiateChat", (req, res) => {
       ]
     });
 
-    console.log("users_activity: ", users_activity);
     console.log("sessions_chat_transcript: ", userId, 
                                               userMessage, 
                                               botMessage);
@@ -138,13 +154,21 @@ app.put("/sendMessage", (req, res) => {
       }
     });
 
-    users_activity.forEach((user) => {
-      if (user.userId === userId) {
-        user.queried++;
-      };
+    // users_activity.forEach((user) => {
+    //   if (user.userId === userId) {
+    //     user.queried++;
+    //   };
+    // });
+
+    // console.log("users_activity: ", users_activity);
+
+    db("users_activity")
+    .where("user_id", "=", userId)
+    .increment("queried", 1)
+    .catch((err) => {
+      res.status(400).json("error registering message");
     });
 
-    console.log("users_activity: ", users_activity);
     console.log("sessions_chat_transcript: ", userId, 
                                               userMessage, 
                                               botMessage);
