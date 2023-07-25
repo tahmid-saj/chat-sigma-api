@@ -1,0 +1,29 @@
+version: '3.6'
+
+services:
+
+  # backend api
+  chat-sigma-api:
+    container_name: backend
+    build: ./
+    command: npm start
+    working_dir: /usr/src/chat-sigma-api
+    environment:
+      POSTGRES_URI: postgres://postgres.text@postgres:5432/chat-sigma-docker
+    links:
+      - postgres
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/usr/src/chat-sigma-api
+
+  # postgres db
+  postgres:
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: chat-sigma-docker
+      POSTGRES_HOST: postgres
+    build: postgres
+    ports:
+    - "5432:5432"
