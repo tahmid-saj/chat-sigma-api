@@ -7,8 +7,10 @@ async function getChatResponse(messageInput) {
     const response = await openai.chat.completions.create({
       messages: [{ role: process.env.REACT_APP_OPEN_API_ROLE, content: messageInput }],
       model: process.env.REACT_APP_OPEN_API_MODEL,
-      max_tokens: DEFAULT_CHATBOT_MAX_TOKENS
+      max_tokens: DEFAULT_CHAT_MAX_TOKENS
     });
+
+    console.log(response)
 
     return {
       message: response.choices[0].message.content
