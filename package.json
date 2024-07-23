@@ -5,19 +5,25 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon index.js",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.4.0",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "knex": "^2.5.0",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
     "openai": "^3.3.0",
     "pg": "^8.11.1",
-    "random-hash": "^4.0.1"
+    "random-hash": "^4.0.1",
+    "request": "^2.88.2"
   }
 }
