@@ -1,10 +1,15 @@
-FROM node:19.8.1
+FROM node:lts-alpine
 
-WORKDIR /usr/src/chat-sigma-api
+WORKDIR /app
 
-COPY ./ ./
+COPY package*.json ./
+RUN npm install --omit=dev
 
-RUN npm install
+COPY . .
+# RUN npm run build
 
-CMD ["/bin/bash"]
+USER node
 
+CMD [ "npm", "start" ]
+
+EXPOSE 8000
