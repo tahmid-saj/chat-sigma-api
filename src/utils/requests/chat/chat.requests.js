@@ -10,8 +10,6 @@ async function getChatResponse(messageInput) {
       max_tokens: DEFAULT_CHAT_MAX_TOKENS
     });
 
-    console.log(response)
-
     return {
       message: response.choices[0].message.content
     }
