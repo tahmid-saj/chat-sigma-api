@@ -4,6 +4,7 @@ API for providing responses from OpenAI API. Developed with Express and OpenAI A
 
 The directory structure is as follows:
 
+```
 chat-sigma-api/
 ├── api/
 │   └── index.js
@@ -34,3 +35,4 @@ chat-sigma-api/
 │       │       └── chat.requests.js
 │       └── validations/
 └── vercel.json
+```
