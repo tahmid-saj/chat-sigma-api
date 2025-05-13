@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 
-import { getChatResponse } from "../../utils/requests/chat/chat.requests"
+import { getChatResponse } from "../../utils/requests/chat/chat.requests.js"
 
 // import { redisPublisher, redisClient, connectRedis } from "../../services/redis/redis.service"
 
