@@ -1,6 +1,9 @@
-const http = require("http")
-require("dotenv").config()
-const { app } = require("../src/app")
+import http from "http"
+import dotenv from "dotenv"
+import { app } from "../src/app.js"
+
+dotenv.config()
+
 const server = http.createServer(app)
 
 const PORT = process.env.PORT
@@ -13,4 +16,4 @@ async function startServer() {
 
 startServer()
 
-module.exports = app
+export default app
