@@ -1,8 +1,8 @@
-const { errorOnGetChatBotResponse } = require("../../errors/chat.errors")
-const { DEFAULT_CHAT_MAX_TOKENS } = require("../../constants/chat.constants")
-const { openai } = require("../../../services/open-ai/open-ai.service")
+import { errorOnGetChatBotResponse } from "../../errors/chat.errors.js"
+import { DEFAULT_CHAT_MAX_TOKENS } from "../../constants/chat.constants.js"
+import { openai } from "../../../services/open-ai/open-ai.service.js"
 
-async function getChatResponse(messageInput) {
+export async function getChatResponse(messageInput: string) {
   try {
     const response = await openai.chat.completions.create({
       messages: [{ role: process.env.REACT_APP_OPEN_API_ROLE, content: messageInput }],
@@ -17,8 +17,4 @@ async function getChatResponse(messageInput) {
     console.log("Error getting chat response")
     errorOnGetChatBotResponse()
   }
-}
-
-module.exports = {
-  getChatResponse
 }
