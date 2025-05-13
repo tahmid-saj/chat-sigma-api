@@ -1,0 +1,36 @@
+name: chat-sigma-api
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # login to docker hub
+      - name: login to docker hub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: echo "${DOCKER_PASSWORD}" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      
+      # build docker image
+      - name: Build docker image
+        run: docker build -t tahmidsaj/chat-sigma-api -f Dockerfile.dev .
+
+      # run docker container and execute tests
+      - name: run tests
+        run: docker run -e CI=true tahmidsaj/chat-sigma-api npm test
+      
+      # push docker container to docker hub
+      - name: push docker container
+        run: docker push tahmidsaj/chat-sigma-api
+      
+      # we'll need to first generate the deployment package
+      - name: generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+      
+      # afterwards, we'll deploy the application
